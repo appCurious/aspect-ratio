@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+
+                width: 100%;
+                height: 100%;
+                margin: auto;
+            }
+
+            .button-container {
+                position: absolute;
+                top: 20px;
+            }
+
+            .aspect-ratio-box {
+                position: relative;
+                outline: solid seagreen;
+                max-width: 600px;
+                max-height: 600px;
+                min-width: 600px;
+                min-height: 600px;
+                /* max-width: 1200px; */
+                /* max-height: 600px; */
+                display: block;
+                /* display: inline-block;*/
+            }
+
+            .aspect-ratio-inner {
+                /* position: absolute; */
+                position: relative;
+                max-width: 100%;
+                max-height: 100%;
+                /* top: 0; */
+                /* left: 0; */
+                /* display: inline; */
+                display: block;
+
+            }
+
+            .video-element {
+                max-width: 100%;
+                max-height: 100%;
+                position: absolute;
+                /* position: relative; */
+                top: 0;
+                left: 0;
+            }
+
+        </style>
+
+        
+    </head>
+    <body class="app">
+        <div class="button-container">
+            <button onclick="nextVideo()">next video</button>
+        </div>
+        <style id="aspect-style"></style>
+        <div class="aspect-ratio-box">
+            <div class="aspect-ratio-inner">
+                <video class="video-element" controls>
+
+                </video>
+            </div>
+        </div>
+    </body>
+    <script>
+        window.onload = init;
+        function init () {
+            setDimensions();
+            loadMedia();
+        }
+
+        function setDimensions () {
+            const b = document.querySelector('.app');
+
+            console.log('what is b ', b)
+            b.style.width = `${window.innerWidth}px`;
+            b.style.height = `${window.innerHeight}px`;
+            console.log('i ran')
+        }
+
+        function loadMedia () {
+            window.TEST_MEDIA = [
+                {
+                    src: '/media/bunny_720x480.mp4',
+                    width: 720,
+                    height: 480
+                },
+                {
+                    src: '/media/world_1920x1080.mp4',
+                    width: 640,
+                    height: 360
+                },
+                {
+                    src: '/media/bunny_1280x720.mp4',
+                    width: 1280,
+                    height: 720
+                },
+                {
+                    src: '/media/vimeo_768x768.mp4',
+                    width: 768,
+                    height: 768
+                }
+                
+            ];
+            window.CURRENT_VIDEO_INDEX = 0;
+            const vid = window.TEST_MEDIA[window.CURRENT_VIDEO_INDEX];
+            const vidElem = document.querySelector('.video-element');
+            vidElem.src = vid.src;
+        }
+
+        function nextVideo () {
+            window.CURRENT_VIDEO_INDEX++;
+
+            if (window.CURRENT_VIDEO_INDEX < 0 || window.CURRENT_VIDEO_INDEX >= window.TEST_MEDIA.length) {
+                window.CURRENT_VIDEO_INDEX = 0;
+            }
+
+            const vid = window.TEST_MEDIA[window.CURRENT_VIDEO_INDEX];
+            const vidElem = document.querySelector('.video-element');
+            vidElem.src = vid.src;
+
+            // const ratio = (vid.width / vid.height).toFixed(2);
+            const ratio = (vid.height / vid.width).toFixed(2);
+            const style = `
+                /*.aspect-ratio-box::before {
+                    content: '';
+                    display: inline-block;
+                    width: 1px;
+                    height: 0px;
+                    padding-bottom: calc(100% / ${ratio});
+                }*/
+                /*.aspect-ratio-box {
+                    height: 0;
+                    overflow: hidden;
+                    calc(100% / ${ratio});
+                    background: white;
+                    position: relative;
+                }*/
+                .aspect-ratio-inner::before {
+                    content: '';
+                    display: inline-block;
+                    width: 1px;
+                    height: 0px;
+                    padding-bottom: calc( (100% / ${ratio}) );
+                }
+                /*.aspect-ratio-inner .video-element::before {
+                    content: '';
+                    display: inline-block;
+                    width: 1px;
+                    height: 0px;
+                    padding-bottom: calc(100% / ${ratio});
+                }*/
+            `
+            const styleElem = document.querySelector('#aspect-style');
+            styleElem.textContent = style;
+            console.log('i clicked next ratio ',ratio, ' vid ', vid)
+
+        }
+
+    </script>
+</html>
