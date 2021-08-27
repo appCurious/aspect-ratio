@@ -155,9 +155,8 @@
                 
             ];
             window.CURRENT_VIDEO_INDEX = 0;
-            const vid = window.TEST_MEDIA[window.CURRENT_VIDEO_INDEX];
-            const vidElem = document.querySelector('.video-element');
-            vidElem.src = vid.src;
+            window.CURRENT_VIDEO_INDEX = -1;
+            nextVideo();
         }
 
         function nextVideo () {
